@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>User Profile</title>
+    </head>
+    <body>
+        <h1>Welcome to your Profile {{name}}</h1>
+        {% if perms.emp_app.add_employee%}
+            <input type = "button", value = "Add"> 
+            {% else %}
+            <h3>No permission to add</h3>
+        {% endif %}
+        {% if perms.emp_app.change_employee%}
+            <input type = "button", value = "Update">
+            {% else %}
+            <h3>No permission to update</h3>
+        {% endif %}
+        {% if perms.emp_app.view_employee%}
+            <input type = "button", value = "view">
+            {% else %}
+            <h3>No permission to view</h3>
+        {% endif %}
+        {% if perms.emp_app.view_employee%}
+            <input type = "button", value = "Delete"><br><br>
+            {% else %}
+            <h3>No permission to delete</h3>
+        {% endif %}
+        {% if users != None %}
+        <h3>List of Users</h3>
+        {% for user in users %}
+        <a href ="{% url 'userdetails' user.id %}">{{user.username}}</a><br>
+        {% endfor %}
+        {% endif%}
+        <form action = "" method = "post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+               {% for error in form.non_field_errors%}
+               <p class = "er">{{error}}</p>
+               {% endfor%}
+            {% endif%}
+            {% for fm in form %}
+               {{fm.label_tag}} {{fm}} {{fm.errors|striptags}}<br><br>
+           {% endfor %}            
+           <input type="submit" class="btn btn-primary" value="Save">
+        </form>   
+
+        {% if messages %}
+        {% for message in messages %}
+
+        <small {% if message.tags %} class = "{{message.tags}}" {% endif %}>{{message}}</small>
+        {% endfor%}
+        {% endif %}
+        <a href = "{% url 'logout' %}">Logout</a>
+ </body>
+</html>
